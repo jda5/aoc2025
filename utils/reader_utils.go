@@ -18,9 +18,7 @@ func loadFile(puzzleNumber string) []byte {
 	inputPath := filepath.Join(root, "puzzles", puzzleNumber, "input.txt")
 
 	data, err := os.ReadFile(inputPath)
-	if err != nil {
-		panic(err)
-	}
+	Check(err)
 	return data
 }
 
