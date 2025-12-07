@@ -34,9 +34,9 @@ func solve(res *int, operator *string, nums []int) {
 	}
 }
 
-// -------------------------------------------------------------------------------- problems
+// -------------------------------------------------------------------------------- part one
 
-func PartOne(worksheet []string) int {
+func SolveWorksheetHuman(worksheet []string) int {
 
 	res := 0
 
@@ -72,7 +72,9 @@ func PartOne(worksheet []string) int {
 	return res
 }
 
-func PartTwo(worksheet []string) int {
+// -------------------------------------------------------------------------------- part two
+
+func SolveWorksheetCephalopods(worksheet []string) int {
 
 	res := 0
 	problemNums := make([]int, 0)

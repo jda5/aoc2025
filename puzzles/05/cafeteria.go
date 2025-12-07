@@ -47,6 +47,8 @@ func isFresh(ranges [][2]int, id int) bool {
 	return false
 }
 
+// -------------------------------------------------------------------------------- part one
+
 func CountFresh(db []string) int {
 	ranges, ids := parseInput(db)
 	count := 0
@@ -59,6 +61,8 @@ func CountFresh(db []string) int {
 
 	return count
 }
+
+// -------------------------------------------------------------------------------- part two
 
 func CountTotalFreshIds(db []string) int {
 	ranges, _ := parseInput(db)

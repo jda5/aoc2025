@@ -44,6 +44,8 @@ func getAdjacentRolls(row int, col int, grid []string) [][2]int {
 	return positions
 }
 
+// -------------------------------------------------------------------------------- part one
+
 func CountRolls(grid []string) int {
 
 	locations := make(Set, 0)
@@ -70,6 +72,8 @@ func CountRolls(grid []string) int {
 
 	return len(locations)
 }
+
+// -------------------------------------------------------------------------------- part two
 
 func RemoveRolls(input []string) int {
 

@@ -85,7 +85,7 @@ func locateStart(d *Diagram) Coordinate {
 	panic("Unable to find starting point")
 }
 
-// -------------------------------------------------------------------------------- puzzles
+// -------------------------------------------------------------------------------- part one
 
 func CountSplits(input []string) int {
 
@@ -154,61 +154,7 @@ func CountSplits(input []string) int {
 	return splitCount
 }
 
-// func CountTimelines(input []string) int {
-
-// 	diagram := createDiagram(input)
-
-// 	timelineCount := 0
-
-// 	q := make(Queue, 0)
-// 	q.Enqueue(locateStart(diagram))
-
-// 	for !q.IsEmpty() {
-// 		beam, err := q.Dequeue()
-// 		utils.Check(err)
-
-// 		for {
-// 			beam.move()
-// 			tile, err := diagram.get(&beam)
-
-// 			if err != nil {
-// 				// the beam is no longer on the diagram
-// 				timelineCount++
-// 				break
-// 			}
-
-// 			if string(tile) == "^" {
-
-// 				newBeams := [2]Coordinate{
-// 					{beam[0], beam[1] - 1},
-// 					{beam[0], beam[1] + 1},
-// 				}
-
-// 				for _, start := range newBeams {
-
-// 					startPtr := &start
-
-// 					startTile, err := diagram.get(startPtr)
-// 					if err != nil {
-// 						// the new beam is not on the diagram
-// 						continue
-// 					}
-
-// 					if startTile == "." {
-// 						q.Enqueue(start)
-// 					}
-// 				}
-
-// 				// the old beam ceases to exist
-// 				break
-// 			}
-
-// 		}
-
-// 	}
-
-// 	return timelineCount
-// }
+// -------------------------------------------------------------------------------- part two
 
 func CountTimelines(input []string) int {
 
