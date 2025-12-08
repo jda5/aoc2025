@@ -11,5 +11,5 @@ func main() {
 
 	input := utils.ReadInputLines("08")
 
-	fmt.Println(puzzles.CalculateCircuits(input, 1000))
+	fmt.Println(puzzles.CalculateConnections(input))
 }

@@ -95,7 +95,7 @@ func CalculateCircuits(input []string, numConnections int) int {
 			continue
 		}
 
-		// Always merge the smaller circuit into the larger one to do less work.
+		// Always merge the smaller circuit into the larger one to do less work
 		if len(*c1) < len(*c2) {
 			c1, c2 = c2, c1
 		}
@@ -126,4 +126,67 @@ func CalculateCircuits(input []string, numConnections int) int {
 	}
 
 	return res
+}
+
+// -------------------------------------------------------------------------------- puzzle two
+
+func CalculateConnections(input []string) int {
+
+	boxes := make([]*Box, 0)
+	circuits := make(map[*Box]*Circuit, 0)
+	for _, data := range input {
+		box := createBox(data)
+		boxes = append(boxes, box)
+
+		circuit := make(Circuit, 0)
+		circuit[box] = struct{}{}
+		circuits[box] = &circuit
+	}
+
+	distances := make([]BoxDistance, 0)
+	for i := 0; i < len(boxes); i++ {
+		b1 := boxes[i]
+		for j := i + 1; j < len(boxes); j++ {
+			b2 := boxes[j]
+			distances = append(distances, BoxDistance{
+				Boxes:    [2]*Box{b1, b2},
+				Distance: distance(b1, b2),
+			})
+		}
+	}
+
+	slices.SortFunc(distances, func(a, b BoxDistance) int {
+		return cmp.Compare(a.Distance, b.Distance)
+	})
+
+	numCircuits := len(boxes)
+
+	for _, distance := range distances {
+		b1 := distance.Boxes[0]
+		b2 := distance.Boxes[1]
+
+		c1 := circuits[b1]
+		c2 := circuits[b2]
+
+		if c1 == c2 {
+			continue
+		}
+
+		// Always merge the smaller circuit into the larger one to do less work
+		if len(*c1) < len(*c2) {
+			c1, c2 = c2, c1
+		}
+
+		// Merge c2 into c1
+		for box := range *c2 {
+			(*c1)[box] = struct{}{}
+			circuits[box] = c1
+		}
+		numCircuits--
+
+		if numCircuits == 1 {
+			return (*b1).X * (*b2).X
+		}
+	}
+	return -1
 }
