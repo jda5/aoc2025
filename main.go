@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
-	puzzles "github.com/jda5/aoc2025/puzzles/08"
+	puzzles "github.com/jda5/aoc2025/puzzles/09"
 	"github.com/jda5/aoc2025/utils"
 )
 
 func main() {
 
-	input := utils.ReadInputLines("08")
+	input := utils.ReadInputLines("09")
 
-	fmt.Println(puzzles.CalculateConnections(input))
+	fmt.Println(puzzles.CalculateLargestBoundedRectangle(input))
 }
