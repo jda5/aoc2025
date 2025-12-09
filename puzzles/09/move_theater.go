@@ -77,8 +77,50 @@ func CalculateLargestRectangle(input []string) int {
 
 // -------------------------------------------------------------------------------- puzzle two
 
+// determine the dimensions of the tile grid
+func determineDimensions(coords []Coordinate) (int, int) {
+	maxX, maxY := 0, 0
+	for _, c := range coords {
+		if c[0] > maxX {
+			maxX = c[0]
+		}
+		if c[1] > maxY {
+			maxY = c[1]
+		}
+	}
+	return maxX + 2, maxY + 2
+}
+
+// draws the boundary between two coordinates
+func drawBoundary(tiles *Tiles, curr *Coordinate, prev *Coordinate) {
+
+	var start, end int
+
+	if curr[1] == prev[1] {
+
+		if curr[0] < prev[0] {
+			start, end = curr[0]+1, prev[0]
+		} else {
+			start, end = prev[0]+1, curr[0]
+		}
+		for i := start; i < end; i++ {
+			(*tiles)[curr[1]][i] = true
+		}
+
+	} else {
+		if curr[1] < prev[1] {
+			start, end = curr[1]+1, prev[1]
+		} else {
+			start, end = prev[1]+1, curr[1]
+		}
+		for i := start; i < end; i++ {
+			(*tiles)[i][curr[0]] = true
+		}
+	}
+}
+
 // checks if the area between a and b is fully bounded by the boundary
-func calculateAreaWithinBoundary(tiles *Tiles, a *Coordinate, b *Coordinate) (int, error) {
+func evaluateBoundedArea(tiles *Tiles, a *Coordinate, b *Coordinate) (int, error) {
 
 	var directions [4][2]int
 
@@ -139,46 +181,6 @@ func calculateAreaWithinBoundary(tiles *Tiles, a *Coordinate, b *Coordinate) (in
 
 }
 
-func determineDimensions(coords []Coordinate) (int, int) {
-	maxX, maxY := 0, 0
-	for _, c := range coords {
-		if c[0] > maxX {
-			maxX = c[0]
-		}
-		if c[1] > maxY {
-			maxY = c[1]
-		}
-	}
-	return maxX + 2, maxY + 2
-}
-
-func drawBoundary(tiles *Tiles, curr *Coordinate, prev *Coordinate) {
-
-	var start, end int
-
-	if curr[1] == prev[1] {
-
-		if curr[0] < prev[0] {
-			start, end = curr[0]+1, prev[0]
-		} else {
-			start, end = prev[0]+1, curr[0]
-		}
-		for i := start; i < end; i++ {
-			(*tiles)[curr[1]][i] = true
-		}
-
-	} else {
-		if curr[1] < prev[1] {
-			start, end = curr[1]+1, prev[1]
-		} else {
-			start, end = prev[1]+1, curr[1]
-		}
-		for i := start; i < end; i++ {
-			(*tiles)[i][curr[0]] = true
-		}
-	}
-}
-
 func CalculateLargestBoundedRectangle(input []string) int {
 
 	coordinates := formatCoordinates(input)
@@ -232,7 +234,7 @@ func CalculateLargestBoundedRectangle(input []string) int {
 		for j := i + 1; j < len(coordinates); j++ {
 
 			b := &coordinates[j]
-			area, err := calculateAreaWithinBoundary(tilePtr, a, b)
+			area, err := evaluateBoundedArea(tilePtr, a, b)
 			if err == nil {
 				maxArea = max(maxArea, area)
 			}
