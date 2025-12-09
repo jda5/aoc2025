@@ -12,13 +12,6 @@ type Coordinate [2]int
 
 type Tiles [][]bool
 
-var DIRECTIONS = [4][2]int{
-	{0, 1},
-	{1, 0},
-	{0, -1},
-	{-1, 0},
-}
-
 // -------------------------------------------------------------------------------- helpers
 
 func abs(x *int) int {
