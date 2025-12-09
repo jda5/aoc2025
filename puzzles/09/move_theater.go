@@ -241,5 +241,4 @@ func CalculateLargestBoundedRectangle(input []string) int {
 		}
 	}
 	return maxArea
-
 }

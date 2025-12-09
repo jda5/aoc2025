@@ -11,5 +11,5 @@ func main() {
 
 	input := utils.ReadInputLines("09")
 
-	fmt.Println(puzzles.CalculateLargestBoundedRectangle(input))
+	fmt.Println(puzzles.CalculateLargestRectangle(input))
 }
