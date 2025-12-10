@@ -3,46 +3,147 @@ package puzzles
 import (
 	"fmt"
 	"strconv"
+	"strings"
+
+	"github.com/jda5/aoc2025/utils"
 )
 
 // -------------------------------------------------------------------------------- state bit operations
 
-type State int8
+type State int16
 
-// func (s *State) toggle(i int) {
-// 	*s ^= (1 << i)
-// }
-
-func (s *State) toggle(b *State) {
-	*s ^= *b
+func (s *State) toggleBit(i int) {
+	*s ^= (1 << i)
 }
 
-func (s *State) print() {
-	fmt.Println(strconv.FormatInt(int64(*s), 2))
+// useful for debugging
+func (s *State) print(size int) {
+	strconv.FormatInt(int64(*s), 2)
+	binStr := strconv.FormatInt(int64(*s), 2)
+	for len(binStr) < size {
+		binStr = "0" + binStr
+	}
+	fmt.Println(binStr)
+}
+
+func toggle(s State, b *State) State {
+	return s ^ *b
+}
+
+type StatePresses struct {
+	state   State
+	presses int
+}
+
+// -------------------------------------------------------------------------------- queue data structure
+// https://medium.com/@danielabatibabatunde1/mastering-queues-in-golang-be77414abe9e
+
+type Queue []StatePresses
+
+// Enqueue adds an element to the rear of the queue
+func (q *Queue) Enqueue(value StatePresses) {
+	*q = append(*q, value)
+}
+
+// Dequeue removes and returns an element from the front of the queue
+func (q *Queue) Dequeue() (StatePresses, error) {
+	if q.IsEmpty() {
+		return StatePresses{}, fmt.Errorf("empty queue")
+	}
+	value := (*q)[0]
+	*q = (*q)[1:]
+	return value, nil
+}
+
+// IsEmpty checks if the queue is empty
+func (q *Queue) IsEmpty() bool {
+	return len(*q) == 0
 }
 
 // -------------------------------------------------------------------------------- helpers
 
-// func parseInput(row string) (State, []State, []int) {
-// 	components := strings.Split(row, " ")
-// 	target := components[0]
-// 	buttons := components[1 : len(components)-1]
-// 	jolage := components[len(components)-1]
+func parseInput(row string) (State, []State, []int) {
+	components := strings.Split(row, " ")
 
-// }
+	targetString := components[0]
+	targetLength := len(targetString[1 : len(targetString)-1])
+	var targetBinary int16
+	for _, char := range targetString[1 : len(targetString)-1] {
+		targetBinary <<= 1 // Shift left by 1 bit
+		if char == '#' {
+			targetBinary |= 1 // Set the rightmost bit to 1
+		}
+		// If char is '.', we leave the bit as 0 (do nothing)
+	}
+	target := State(targetBinary)
+
+	buttons := make([]State, 0)
+	for _, buttonString := range components[1 : len(components)-1] {
+		indexes := strings.Split(buttonString[1:len(buttonString)-1], ",")
+		button := State(0)
+		for _, idxString := range indexes {
+			i, err := strconv.Atoi(idxString)
+			utils.Check(err)
+			button.toggleBit(targetLength - i - 1)
+		}
+		buttons = append(buttons, button)
+	}
+
+	joltages := make([]int, 0)
+	jolageString := components[len(components)-1]
+	for numString := range strings.SplitSeq(jolageString[1:len(jolageString)-1], ",") {
+		num, err := strconv.Atoi(numString)
+		utils.Check(err)
+		joltages = append(joltages, num)
+	}
+
+	return target, buttons, joltages
+}
 
 // -------------------------------------------------------------------------------- puzzle one
 
+func calcualtePresses(target State, buttons []State) int {
+
+	q := Queue{}
+	states := make(map[State]struct{}, 0)
+
+	initial := StatePresses{state: State(0), presses: 0}
+
+	q.Enqueue(initial)
+	states[initial.state] = struct{}{}
+
+	for !q.IsEmpty() {
+		current, err := q.Dequeue()
+		utils.Check(err)
+
+		if current.state == target {
+			return current.presses
+		}
+
+		for _, button := range buttons {
+			newState := toggle(current.state, &button)
+			if _, ok := states[newState]; !ok {
+				states[newState] = struct{}{}
+				q.Enqueue(StatePresses{state: newState, presses: current.presses + 1})
+			}
+		}
+
+	}
+
+	return -1
+}
+
 func FewestButtonPresses(input []string) int {
+
 	res := 0
-	s := State(10)
-	s.print()
 
-	b := State(100)
-	b.print()
-
-	s.toggle(&b)
-	s.print()
+	for _, row := range input {
+		target, buttons, _ := parseInput(row)
+		presses := calcualtePresses(target, buttons)
+		res += presses
+	}
 
 	return res
 }
+
+// -------------------------------------------------------------------------------- puzzle two
