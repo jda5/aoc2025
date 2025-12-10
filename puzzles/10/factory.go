@@ -3,7 +3,6 @@ package puzzles
 import (
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 // -------------------------------------------------------------------------------- state bit operations
@@ -24,13 +23,13 @@ func (s *State) print() {
 
 // -------------------------------------------------------------------------------- helpers
 
-func parseInput(row string) (State, []State, []int) {
-	components := strings.Split(row, " ")
-	target := components[0]
-	buttons := components[1 : len(components)-1]
-	jolage := components[len(components)-1]
+// func parseInput(row string) (State, []State, []int) {
+// 	components := strings.Split(row, " ")
+// 	target := components[0]
+// 	buttons := components[1 : len(components)-1]
+// 	jolage := components[len(components)-1]
 
-}
+// }
 
 // -------------------------------------------------------------------------------- puzzle one
 
