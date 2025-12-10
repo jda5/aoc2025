@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
-	puzzles "github.com/jda5/aoc2025/puzzles/09"
+	puzzles "github.com/jda5/aoc2025/puzzles/10"
 	"github.com/jda5/aoc2025/utils"
 )
 
 func main() {
 
-	input := utils.ReadInputLines("09")
+	input := utils.ReadInputLines("10")
 
-	fmt.Println(puzzles.CalculateLargestRectangle(input))
+	fmt.Println(puzzles.FewestButtonPresses(input))
 }
