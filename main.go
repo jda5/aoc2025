@@ -11,5 +11,5 @@ func main() {
 
 	input := utils.ReadInputLines("10")
 
-	fmt.Println(puzzles.FewestButtonPresses(input))
+	fmt.Println(puzzles.FewestButtonPressesWithJoltage(input))
 }
