@@ -11,5 +11,5 @@ func main() {
 
 	input := utils.ReadInputLines("11")
 
-	fmt.Println(puzzles.GetPathCountThroughNodes(input))
+	fmt.Println(puzzles.CountPathsThroughNodes(input))
 }
