@@ -16,16 +16,6 @@ func (s *State) toggleBit(i int) {
 	*s ^= (1 << i)
 }
 
-// useful for debugging
-func (s *State) print(size int) {
-	strconv.FormatInt(int64(*s), 2)
-	binStr := strconv.FormatInt(int64(*s), 2)
-	for len(binStr) < size {
-		binStr = "0" + binStr
-	}
-	fmt.Println(binStr)
-}
-
 func toggle(s State, b *State) State {
 	return s ^ *b
 }
@@ -143,102 +133,5 @@ func FewestButtonPresses(input []string) int {
 }
 
 // -------------------------------------------------------------------------------- puzzle two
-// doesn't work
 
-type StatePressesJoltage struct {
-	state   State
-	presses int
-	joltage []int
-}
-
-func (s *StatePressesJoltage) toString() string {
-	return fmt.Sprintf("%v-%v-%v", s.state, s.presses, s.joltage)
-}
-
-func compareJoltage(currJoltage []int, targetJoltage []int) int {
-	equal := true
-	for i := range currJoltage {
-		if currJoltage[i] != targetJoltage[i] {
-			equal = false
-			if currJoltage[i] > targetJoltage[i] {
-				return 1
-			}
-		}
-	}
-	if equal {
-		return 2
-	}
-	return 0
-}
-
-func incrementJoltage(joltage []int, button *State) []int {
-
-	result := make([]int, len(joltage))
-	copy(result, joltage)
-
-	for i := range joltage {
-		// Check if the bit at position i (from the right) is set
-		if (*button)&(1<<i) != 0 {
-			result[len(result)-i-1]++
-		}
-	}
-	return result
-}
-
-func calcualtePressesWithJoltage(targetLights State, buttons []State, targetJoltage []int) int {
-
-	q := Queue[StatePressesJoltage]{}
-	states := make(map[string]struct{}, 0)
-
-	initial := StatePressesJoltage{state: State(0), presses: 0, joltage: make([]int, len(targetJoltage))}
-
-	q.Enqueue(initial)
-	states[initial.toString()] = struct{}{}
-
-	for !q.IsEmpty() {
-		current, err := q.Dequeue()
-		utils.Check(err)
-
-		joltageState := compareJoltage(current.joltage, targetJoltage)
-		if joltageState == 2 {
-			if current.state == targetLights {
-				return current.presses
-			}
-			// since joltages are equal, any further button presses will result in unequal joltages
-			continue
-		}
-
-		if joltageState == 1 {
-			// joltage state has exceeded the alloted max
-			continue
-		}
-
-		for _, button := range buttons {
-			buttonPtr := &button
-
-			newState := StatePressesJoltage{
-				state:   toggle(current.state, buttonPtr),
-				presses: current.presses + 1,
-				joltage: incrementJoltage(current.joltage, buttonPtr),
-			}
-
-			newStateString := newState.toString()
-
-			if _, ok := states[newStateString]; !ok {
-				states[newStateString] = struct{}{}
-				q.Enqueue(newState)
-			}
-		}
-	}
-	return -1
-}
-
-func FewestButtonPressesWithJoltage(input []string) int {
-	res := 0
-	for _, row := range input {
-		target, buttons, joltage := parseInput(row)
-		presses := calcualtePressesWithJoltage(target, buttons, joltage)
-		res += presses
-	}
-	return res
-}
+// :(
